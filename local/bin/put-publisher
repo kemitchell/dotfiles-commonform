@@ -1,0 +1,24 @@
+#!/bin/bash
+read -p "Name: " NAME
+read -p "E-Mail: " EMAIL
+read -p "About: " ABOUT
+read -s -p "Password: " PASSWORD
+read -s -p "Confirm: " CONFIRMATION
+
+if [ "$PASSWORD" != "$CONFIRMATION" ]; then
+  echo "Passwords did not match."
+  exit 1
+fi
+
+curl -v \
+  -X PUT \
+  -H "Content-Type: application/json" \
+  --user "administrator:$COMMONFORM_ADMINISTRATOR_PASSWORD" \
+  --data @- \
+  "https://api.commonform.org/publishers/$NAME" <<JSON
+{
+  "about": "$ABOUT",
+  "email": "$EMAIL",
+  "password": "$PASSWORD"
+}
+JSON
